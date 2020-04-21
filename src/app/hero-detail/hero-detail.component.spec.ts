@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, fakeAsync, tick, flush } from "@angular/core/testing";
+import { TestBed, ComponentFixture, fakeAsync, tick, flush, async } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { HeroService } from "../hero.service";
 import { Location } from '@angular/common';
@@ -40,16 +40,31 @@ describe('HeroDetailComponent', () => {
 
   });
 
-  it('save call updateHero when save is called', fakeAsync (() => {
+  // it('save call updateHero when save is called', fakeAsync (() => {
+
+  //   mockHeroService.updateHero.and.returnValue(of({}));
+  //   fixture.detectChanges();
+
+  //   fixture.componentInstance.save();
+  //   // tick(250);
+  //   flush();
+
+  //   expect(mockHeroService.updateHero).toHaveBeenCalled();
+
+  // }));
+
+  it('save call updateHero when save is called', async (() => {
+
+    // This kind of async can read all kinds of promises but cannot deal with settimeouts.
 
     mockHeroService.updateHero.and.returnValue(of({}));
     fixture.detectChanges();
 
     fixture.componentInstance.save();
-    // tick(250);
-    flush();
 
-    expect(mockHeroService.updateHero).toHaveBeenCalled();
+    fixture.whenStable().then(() => {
+      expect(mockHeroService.updateHero).toHaveBeenCalled();
+    });
 
   }));
 });
